@@ -19,6 +19,7 @@ from src.utils.config import (
     PROCESSED_DIR,
     TABLES_DIR,
     YEARS,
+    ensure_file,
 )
 
 
@@ -154,6 +155,7 @@ def sensitivity_analysis(
 
     for year in YEARS:
         filepath = yearly_dir / f"msoa_yearly_{year}.gpkg"
+        filepath = ensure_file(filepath)
         if not filepath.exists():
             logger.warning(f"Yearly file not found: {filepath}")
             continue
@@ -185,6 +187,7 @@ def run_spatial_autocorrelation(
         Tuple of (global_results, lisa_gdf, yearly_sensitivity).
     """
     gpkg_path = gpkg_path or MSOA_ANALYSIS_GPKG
+    gpkg_path = ensure_file(gpkg_path)
     logger.info("=" * 50)
     logger.info("Running spatial autocorrelation analysis")
     logger.info("=" * 50)

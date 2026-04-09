@@ -8,7 +8,7 @@ import geopandas as gpd
 import pandas as pd
 from loguru import logger
 
-from src.utils.config import CRS_OSGB, RAW_DIR
+from src.utils.config import CRS_OSGB, RAW_DIR, ensure_file
 from src.utils.crs import df_to_geodf_osgb
 
 
@@ -26,6 +26,7 @@ def spatial_join_to_msoa(
         GeoDataFrame of accidents with MSOA codes attached.
     """
     msoa_path = msoa_path or (RAW_DIR / "msoa_2021_boundaries.gpkg")
+    msoa_path = ensure_file(msoa_path)
     logger.info(f"Loading MSOA boundaries from {msoa_path}")
     msoa = gpd.read_file(msoa_path)
 
@@ -78,6 +79,7 @@ def aggregate_to_msoa(
         MSOA-level GeoDataFrame with aggregated metrics.
     """
     msoa_path = msoa_path or (RAW_DIR / "msoa_2021_boundaries.gpkg")
+    msoa_path = ensure_file(msoa_path)
 
     group_cols = ["msoa_code", "msoa_name"]
     if by_year and year_col and year_col in joined.columns:

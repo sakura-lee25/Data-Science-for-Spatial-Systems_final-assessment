@@ -24,6 +24,7 @@ from src.utils.config import (
     HIGH_RISK_PERCENTILE,
     MSOA_ANALYSIS_GPKG,
     TABLES_DIR,
+    ensure_file,
 )
 
 # Features used for classification
@@ -256,6 +257,7 @@ def run_ml_classification(
         Dictionary with all classification results.
     """
     gpkg_path = gpkg_path or MSOA_ANALYSIS_GPKG
+    gpkg_path = ensure_file(gpkg_path)
 
     logger.info("=" * 50)
     logger.info("Running ML classification pipeline")

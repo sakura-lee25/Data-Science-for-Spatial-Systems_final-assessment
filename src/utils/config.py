@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import io
+import tempfile
 from pathlib import Path
+from urllib.request import urlopen
 
 # ── Project root ──────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -66,11 +69,49 @@ OS_ROADS_URL = (
 MSOA_ANALYSIS_GPKG = PROCESSED_DIR / "msoa_analysis.gpkg"
 MGWR_COEFFICIENTS_GPKG = PROCESSED_DIR / "mgwr_coefficients.gpkg"
 
+# ── GitHub raw data URLs ─────────────────────────────────────
+GITHUB_RAW_BASE = (
+    "https://raw.githubusercontent.com/sakura-lee25/"
+    "Data-Science-for-Spatial-Systems_final-assessment/main/"
+)
+
 # ── Figure DPI ────────────────────────────────────────────────
 FIGURE_DPI = 300
 
 # ── High-risk threshold (top percentile) ─────────────────────
 HIGH_RISK_PERCENTILE = 80
+
+
+def ensure_file(local_path: Path, repo_relpath: str | None = None) -> Path:
+    """Return *local_path* if it exists, otherwise download from GitHub.
+
+    Args:
+        local_path: Expected local file path.
+        repo_relpath: Path relative to repo root (e.g. "data/raw/imd.csv").
+                      If None, inferred from *local_path* relative to PROJECT_ROOT.
+
+    Returns:
+        The local path (downloaded if it was missing).
+    """
+    if local_path.exists():
+        return local_path
+
+    if repo_relpath is None:
+        try:
+            repo_relpath = str(local_path.relative_to(PROJECT_ROOT))
+        except ValueError:
+            raise FileNotFoundError(
+                f"{local_path} not found and cannot infer GitHub path"
+            )
+
+    url = GITHUB_RAW_BASE + repo_relpath
+    local_path.parent.mkdir(parents=True, exist_ok=True)
+
+    print(f"Downloading {repo_relpath} from GitHub ...")
+    with urlopen(url) as resp, open(local_path, "wb") as f:
+        f.write(resp.read())
+    print(f"  Saved to {local_path} ({local_path.stat().st_size / 1e6:.1f} MB)")
+    return local_path
 
 
 def ensure_dirs() -> None:

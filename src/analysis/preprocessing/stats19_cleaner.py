@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-from src.utils.config import RAW_DIR, YEARS
+from src.utils.config import RAW_DIR, YEARS, ensure_file
 from src.utils.io import read_csv_chunked
 
 # Columns required for the analysis
@@ -60,9 +60,7 @@ def load_and_clean_stats19(
     frames: list[pd.DataFrame] = []
     for year in years:
         filepath = raw_dir / f"stats19_collision_{year}.csv"
-        if not filepath.exists():
-            logger.warning(f"Missing file: {filepath}")
-            continue
+        filepath = ensure_file(filepath, f"data/raw/stats19_collision_{year}.csv")
 
         df = read_csv_chunked(filepath)
         frames.append(df)

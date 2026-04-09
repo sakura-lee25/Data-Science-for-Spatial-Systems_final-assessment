@@ -9,7 +9,7 @@ import pandas as pd
 from loguru import logger
 from shapely.geometry import Point
 
-from src.utils.config import CRS_OSGB, RAW_DIR
+from src.utils.config import CRS_OSGB, RAW_DIR, ensure_file
 
 
 def compute_road_metrics(
@@ -33,6 +33,7 @@ def compute_road_metrics(
         junction_count, junction_density.
     """
     msoa_path = msoa_path or (RAW_DIR / "msoa_2021_boundaries.gpkg")
+    msoa_path = ensure_file(msoa_path)
     roads_path = roads_path or _find_roads_gpkg()
 
     # Load MSOA boundaries

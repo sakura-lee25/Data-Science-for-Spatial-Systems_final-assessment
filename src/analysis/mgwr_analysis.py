@@ -20,6 +20,7 @@ from src.utils.config import (
     MGWR_COEFFICIENTS_GPKG,
     MSOA_ANALYSIS_GPKG,
     TABLES_DIR,
+    ensure_file,
 )
 
 
@@ -165,6 +166,7 @@ def run_mgwr(
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = CACHE_DIR / "mgwr_results.pkl"
 
+    cache_path = ensure_file(cache_path)
     if cache and cache_path.exists():
         logger.info(f"Loading cached MGWR results from {cache_path}")
         with open(cache_path, "rb") as f:
@@ -275,6 +277,7 @@ def run_mgwr_analysis(
         Dictionary with all analysis results.
     """
     gpkg_path = gpkg_path or MSOA_ANALYSIS_GPKG
+    gpkg_path = ensure_file(gpkg_path)
 
     logger.info("=" * 50)
     logger.info("Running MGWR analysis pipeline")

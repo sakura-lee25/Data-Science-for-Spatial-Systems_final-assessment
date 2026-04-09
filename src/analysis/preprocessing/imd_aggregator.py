@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-from src.utils.config import RAW_DIR
+from src.utils.config import RAW_DIR, ensure_file
 
 
 def aggregate_imd_to_msoa(
@@ -28,6 +28,10 @@ def aggregate_imd_to_msoa(
     """
     imd_path = imd_path or (RAW_DIR / "imd_2019_scores.csv")
     lookup_path = lookup_path or (RAW_DIR / "lsoa_msoa_lookup.csv")
+
+    # Ensure files exist locally (download from GitHub if missing)
+    imd_path = ensure_file(imd_path)
+    lookup_path = ensure_file(lookup_path)
 
     # Read IMD scores (CSV version)
     logger.info(f"Loading IMD data from {imd_path.name}")

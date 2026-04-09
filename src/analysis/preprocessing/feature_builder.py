@@ -15,6 +15,7 @@ from src.utils.config import (
     PROCESSED_DIR,
     RAW_DIR,
     YEARS,
+    ensure_file,
 )
 from src.analysis.preprocessing.stats19_cleaner import load_and_clean_stats19
 from src.analysis.preprocessing.spatial_join import (
@@ -46,9 +47,11 @@ def build_features(force: bool = False) -> gpd.GeoDataFrame:
     Returns:
         Final MSOA-level GeoDataFrame.
     """
-    if MSOA_ANALYSIS_GPKG.exists() and not force:
-        logger.info(f"Loading existing analysis data from {MSOA_ANALYSIS_GPKG}")
-        return gpd.read_file(MSOA_ANALYSIS_GPKG)
+    if not force:
+        cached = ensure_file(MSOA_ANALYSIS_GPKG)
+        if cached.exists():
+            logger.info(f"Loading existing analysis data from {cached}")
+            return gpd.read_file(cached)
 
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -146,6 +149,7 @@ def _build_yearly_datasets(joined: gpd.GeoDataFrame) -> None:
 def _load_population() -> pd.DataFrame:
     """Load MSOA population estimates."""
     pop_path = RAW_DIR / "msoa_population.csv"
+    pop_path = ensure_file(pop_path)
     if not pop_path.exists():
         logger.warning("Population data not found — using placeholder zeros")
         return pd.DataFrame(columns=["msoa_code", "population"])
