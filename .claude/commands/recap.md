@@ -19,14 +19,15 @@ allowedTools: ["Read", "Bash", "Glob", "Grep"]
 !`git status --short 2>/dev/null`
 
 ## 数据文件状态
-!`ls -lh data/raw/ 2>/dev/null | head -10`
-!`ls -lh data/processed/ 2>/dev/null | head -10`
+!`ls -lh data/raw/ 2>/dev/null`
+!`ls -lh data/processed/ 2>/dev/null`
 
 ## 虚拟环境
-!`[[ -n "$VIRTUAL_ENV" ]] && echo "✅ venv 已激活: $VIRTUAL_ENV" || echo "⚠️ venv 未激活，请运行: source .venv/bin/activate"`
+!`echo "VIRTUAL_ENV=$VIRTUAL_ENV"`
 
 给我一份简洁摘要（不超过 15 行）：
 1. 当前在哪个 Phase，整体进度
 2. 上次做到哪了
 3. 数据状态（有什么数据，缺什么数据）
-4. 今天建议从哪里继续
+4. 虚拟环境是否激活（如果 VIRTUAL_ENV 为空，提醒我运行 source .venv/bin/activate）
+5. 今天建议从哪里继续

@@ -10,12 +10,13 @@ build/
 venv/
 env/
 
-# Data (大文件不提交，只保留处理脚本)
-data/raw/*.csv
+# Data — OS Roads 太大 (2GB), 排除; 其余数据上传到 GitHub
+data/raw/Data/
+data/raw/os_open_roads.zip
+*.parquet
 data/raw/*.xlsx
 data/raw/*.json
-data/cache/
-*.parquet
+data/raw/*.geojson
 
 # Jupyter
 .ipynb_checkpoints/
