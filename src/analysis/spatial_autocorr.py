@@ -33,7 +33,7 @@ def build_spatial_weights(gdf: gpd.GeoDataFrame) -> Queen:
         Queen contiguity weights (row-standardised).
     """
     logger.info("Building Queen contiguity spatial weights...")
-    w = Queen.from_dataframe(gdf, use_index=False)
+    w = Queen.from_dataframe(gdf, use_index=False, silence_warnings=True)
     w.transform = "r"
     logger.info(
         f"Weights: {w.n} observations, mean neighbours = {w.mean_neighbors:.1f}, "
@@ -134,6 +134,7 @@ def local_morans_i(
 
     return result
 
+ISLAND_CODES = ['E02006781', 'E02006741', 'E02006742', 'E02006752']
 
 def sensitivity_analysis(
     yearly_dir: Path | None = None,
@@ -162,6 +163,8 @@ def sensitivity_analysis(
 
         gdf = gpd.read_file(filepath)
         gdf = gdf[gdf[variable] > 0].copy()  # Exclude zero-rate MSOAs
+
+        gdf = gdf[~gdf['msoa_code'].isin(ISLAND_CODES)].reset_index(drop=True)
 
         w = build_spatial_weights(gdf)
         mi_result = global_morans_i(gdf, variable=variable, w=w, permutations=permutations)
