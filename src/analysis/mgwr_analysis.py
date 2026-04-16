@@ -28,9 +28,6 @@ from src.utils.config import (
 DEPENDENT_VAR = "log_accident_rate"
 INDEPENDENT_VARS = [
     "imd_score",
-    "junction_density",
-    "road_density",
-    "urban_pct",
     "dark_pct",
     "wet_road_pct",
 ]
