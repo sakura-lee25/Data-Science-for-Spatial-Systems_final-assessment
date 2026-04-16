@@ -30,9 +30,7 @@ from src.utils.config import (
 # Features used for classification
 FEATURE_COLS = [
     "imd_score",
-    "junction_density",
-    "road_density",
-    "urban_pct",
+    'infra_index',
     "dark_pct",
     "wet_road_pct",
     "road_length_km",
